@@ -1,0 +1,10 @@
+{% extends 'szablon.html' %}
+{% block naglowek %}Studenci – Logowanie{% endblock naglowek %}
+{% block tresc %}
+    <form action="." method="POST">
+    {% csrf_token %}
+        {{ form.as_p }}
+        <br>
+        <input type="submit" value="Zapisz" class="btn">
+    </form>
+{% endblock tresc %}

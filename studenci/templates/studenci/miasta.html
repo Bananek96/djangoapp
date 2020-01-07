@@ -1,0 +1,25 @@
+{% extends 'szablon.html' %}
+{% block naglowek %}Miasta{% endblock naglowek %}
+{% block tresc %}
+
+<h2>Dodaj miasto</h2>
+    {% if user.is_authenticated %}
+        {% if perms.studenci.add_miasto %}
+            <form action="." method="POST">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Zapisz">
+            </form>
+        {% else %}
+            <div class="well">Nie możesz dodawać miast!</div>
+        {% endif %}
+    {% endif %}
+
+<h2>Lista miast</h2>
+<ol>
+    {% for miasto in miasta %}
+        <li>{{ miasto.nazwa }}&nbsp;{{ miasto.kod }}</li>
+    {% endfor %}
+</ol>
+
+{% endblock tresc %}

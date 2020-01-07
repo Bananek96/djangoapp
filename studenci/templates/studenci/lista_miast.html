@@ -1,0 +1,12 @@
+{% extends 'szablon.html' %}
+{% block naglowek %}Miasta{% endblock naglowek %}
+{% block tresc %}
+
+<h2>Lista miast</h2>
+<ol>
+    {% for miasto in miasta %}
+        <li>{{ miasto.nazwa }}&nbsp;{{ miasto.kod }}</li>
+    {% endfor %}
+</ol>
+
+{% endblock tresc %}

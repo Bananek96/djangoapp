@@ -1,0 +1,15 @@
+{% extends 'szablon.html' %}
+{% block naglowek %}Rejestracja{% endblock naglowek %}
+{% block tresc %}
+
+    {% if user.is_authenticated %}
+        <p>Jesteś już zalogowany jako {{ user.username }}.</p>
+    {% else %}
+        <form action="." method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Zarejestruj</button>
+        </form>
+    {% endif %}
+
+{% endblock tresc %}
