@@ -1,12 +1,18 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 
 from studenci.models import Miasto, Uczelnia
-from studenci.forms import UserLoginForm, UczelniaForm, MiastoForm
+from studenci.forms import UserLoginForm, UczelniaForm, MiastoForm, UczelniaModelForm, MiastoModelForm
 
 from django.views.generic import ListView
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
+from django.views.generic.edit import CreateView, UpdateView
+from django.contrib.messages.views import SuccessMessageMixin
+from django.views.generic import DeleteView
+
 
 def index(request):
     # return HttpResponse("<h1>Witaj wsród sudentów!</h1>")
@@ -68,6 +74,38 @@ class ListaUczelni(ListView):
     context_object_name = 'uczelnie'
     template_name = 'studenci/lista_uczelni.html'
 
+@method_decorator(login_required, name='dispatch')
+class DodajMiasto(CreateView):
+    model = Miasto
+    fields = ('nazwa', 'kod')
+    template_name = 'studenci/dodaj_miasto.html'
+    success_url = reverse_lazy('studenci:miasta_lista')
+
+    def get_context_data(self, **kwargs):
+        context = super(DodajMiasto, self).get_context_data(**kwargs)
+        context['miasta'] = Miasto.objects.all()
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, "Dodano miasto!")
+        return super().form_vaild(form)
+
+@method_decorator(login_required, name='dispatch')
+class DodajUczelnie(CreateView):
+    model = Uczelnia
+    fields = ('nazwa',)
+    template_name = 'studenci/dodaj_uczelnie.html'
+    success_url = reverse_lazy('studenci:uczelnie_lista')
+
+    def get_context_data(self, **kwargs):
+        context = super(DodajUczelnie, self).get_context_data(**kwargs)
+        context['uczelnie'] = Uczelnia.objects.all()
+        return context
+
+    def form_valid(self, form):
+        messages.success(self.request, "Dodano uczelnie!")
+        return super().form_vaild(form)
+
 def loguj_studenta(request):
     if request.method == 'POST':
         pass
@@ -75,3 +113,37 @@ def loguj_studenta(request):
         form = UserLoginForm()
     kontekst = {'form': form}
     return render(request, 'studenci/login.html', kontekst)
+
+@method_decorator(login_required, name='dispatch')
+class EdytujUczelnie(SuccessMessageMixin, UpdateView):
+    model = Uczelnia
+    form_class = UczelniaModelForm
+    template_name = 'studenci/uczelnie.html'
+    success_url = reverse_lazy('studenci:uczelnie_lista')
+    success_message = 'Uczelnie zaktualizowano!'
+
+    def get_context_data(self, **kwargs):
+        context = super(EdytujUczelnie, self).get_context_data(**kwargs)
+        context['uczelnie'] = Uczelnia.objects.all()
+        return context
+
+class UsunUczelnie(DeleteView):
+    model = Uczelnia
+    success_url = reverse_lazy('studenci:uczelnie_lista')
+
+@method_decorator(login_required, name='dispatch')
+class EdytujMiasta(SuccessMessageMixin, UpdateView):
+    model = Miasto
+    fields = ('nazwa', 'kod')
+    form_class = MiastoModelForm
+    template_name = 'studenci/dodaj_miasto.html'
+    success_url = reverse_lazy('studenci:miasta_lista')
+
+    def get_context_data(self, **kwargs):
+        context = super(EdytujMiasto, self).get_context_data(**kwargs)
+        context['miasta'] = Miasto.objects.all()
+        return context
+
+class UsunMiasta(DeleteView):
+    model = Miasto
+    success_url = reverse_lazy('studenci:miasta_lista')

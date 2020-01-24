@@ -5,7 +5,10 @@
 <h2>Lista uczelni</h2>
 <ol>
     {% for uczelnia in uczelnie %}
-        <li>{{ uczelnia.nazwa }}</li>
+        <li>{{ uczelnia.nazwa }} -
+            <a href="{% url 'studenci:uczelnie_edytuj' uczelnia.id %}">EDYTUJ, </a>
+            <a href="{% url 'studenci:uczelnie_usun' uczelnia.id %}">USUN </a>
+        </li>
     {% endfor %}
 </ol>
 

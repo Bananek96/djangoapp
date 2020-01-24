@@ -1,4 +1,6 @@
 from django import forms
+from django.forms import ModelForm
+from studenci.models import Uczelnia, Miasto
 
 class UserLoginForm(forms.Form):
     login = forms.CharField(
@@ -27,4 +29,12 @@ class MiastoForm(forms.Form):
         widget=forms.TextInput()
     )
 
-# github.com/lo1cgsan/djangoapp1
+class UczelniaModelForm(ModelForm):
+    class Meta:
+        model = Uczelnia
+        fields = ('nazwa',)
+
+class MiastoModelForm(ModelForm):
+    class Meta:
+        model = Miasto
+        fields = ('nazwa', 'kod',)

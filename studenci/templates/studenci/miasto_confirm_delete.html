@@ -1,0 +1,15 @@
+{% extends 'szablon.html' %}
+{% block naglowek %}Miasta{% endblock naglowek %}
+{% block tresc %}
+
+<h2>Usuwanie Miasta</h2>
+    <form method="POST">
+    {% csrf_token %}
+        <p class="lead">Na pewno usunąć miasto:<br>
+        {{ object.nazwa }}?
+        </p>
+        {{ form.as_p }}
+        <input type="submit" value="Usun">
+    </form>
+
+{% endblock tresc %}

@@ -1,13 +1,14 @@
 {% extends 'szablon.html' %}
 {% block naglowek %}Miasta{% endblock naglowek %}
 {% block tresc %}
+    {% load crispy_forms_tags %}
 
 <h2>Dodaj miasto</h2>
     {% if user.is_authenticated %}
         {% if perms.studenci.add_miasto %}
-            <form action="." method="POST">
+            <form method="POST">
                 {% csrf_token %}
-                {{ form.as_p }}
+                {{ form|crispy}}
                 <input type="submit" value="Zapisz">
             </form>
         {% else %}
@@ -18,7 +19,7 @@
 <h2>Lista miast</h2>
 <ol>
     {% for miasto in miasta %}
-        <li>{{ miasto.nazwa }}&nbsp;{{ miasto.kod }}</li>
+        <li>{{ miasto.nazwa }}&nbsp;{{ miasto.kod }} - <a href="{% url 'studenci:miasta_edytuj' miasto.id %}">EDYTUJ</a></li>
     {% endfor %}
 </ol>
 
